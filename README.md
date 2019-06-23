@@ -2,6 +2,7 @@
 1. NativeLib.java, 简单展示怎样从native拿值。
 2. [NativeHelloALib.java,libasimple] :构建一个hello简单的.a静态库，且将.a和所需头文件导出到 project/export/libahello 目录中
 3. [NativeHelloSoLib.java,libsosimple] :构建一个hello简单的.so动态库，且将.so和所需头文件导出到 project/export/libsohello 目录中
+3. NativeJsonSoLib :构建一个 jsoncpp.so动态库，且将.so和所需头文件导出到 project/export/libsojsoncpp 目录中,展示了怎么读取设置原生People类
 
 ## 注意点
 - 当链接so动态库时 必须设置so库路径让gradle将需要的库打到apk中，若不需要动态库，则将以下命令注释
