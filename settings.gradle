@@ -1,0 +1,1 @@
+include ':app', ':libasimple', ':libsojsoncpp', ':libsosimple'

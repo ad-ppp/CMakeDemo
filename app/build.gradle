@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.jacky.jsoncppdemo"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=c++_static'
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //    当使用so动态库时 必须设置so库路径让gradle将需要的库打到apk中，若不需要动态库，则将以下命令注释 sourceSets{ }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['../export/libsohello/lib', '../export/libsojsoncpp/lib']
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path 'src/main/cpp/CMakeLists.txt'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+// 若需要每次都编译 libsojsoncpp，则在setting.gradle中打开 include ':libsojsoncpp' 注释 且将以下的tasks打开，
+tasks.whenTaskAdded { task ->
+    if (task.name == 'externalNativeBuildRelease') {
+        task.dependsOn ":libsojsoncpp:externalNativeBuildRelease"
+    } else if (task.name == 'externalNativeBuildDebug') {
+        task.dependsOn ":libsojsoncpp:externalNativeBuildDebug"
+    }
+}
+
+// 若需要每次都编译libasimple，则在setting.gradle中打开 include ':libasimple' 注释 且将以下的tasks打开，
+tasks.whenTaskAdded { task ->
+    if (task.name == 'externalNativeBuildRelease') {
+        task.dependsOn ":libasimple:externalNativeBuildRelease"
+    } else if (task.name == 'externalNativeBuildDebug') {
+        task.dependsOn ":libasimple:externalNativeBuildDebug"
+    }
+}
+
+// 若需要每次都编译libsosimple，则在setting.gradle中打开 include ':libsosimple' 注释 且将以下的tasks打开，
+tasks.whenTaskAdded { task ->
+    if (task.name == 'externalNativeBuildRelease') {
+        task.dependsOn ":libsosimple:externalNativeBuildRelease"
+    } else if (task.name == 'externalNativeBuildDebug') {
+        task.dependsOn ":libsosimple:externalNativeBuildDebug"
+    }
+}
